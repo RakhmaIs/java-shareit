@@ -31,7 +31,7 @@ public class UserMapper {
                         .build() : null;
     }
 
-    public static List<UserDto> ToListUsersDto(Collection<User> users) {
+    public static List<UserDto> toListUsersDto(Collection<User> users) {
         List<UserDto> usersDto = new ArrayList<>();
         for (User user : users) {
             usersDto.add(toUserDto(user));

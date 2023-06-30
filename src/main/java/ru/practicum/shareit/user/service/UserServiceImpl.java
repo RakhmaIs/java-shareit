@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> readUsers() {
-        return UserMapper.ToListUsersDto(userRepository.readUsers());
+        return UserMapper.toListUsersDto(userRepository.readUsers());
     }
 
     @Override

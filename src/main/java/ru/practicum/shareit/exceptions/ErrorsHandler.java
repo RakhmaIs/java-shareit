@@ -30,6 +30,6 @@ public class ErrorsHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<?> handleResponseStatusExc(final ResponseStatusException e) {
-        return new ResponseEntity<> (Map.of("error", Objects.requireNonNull(e.getReason())), e.getStatus());
+        return new ResponseEntity<>(Map.of("error", Objects.requireNonNull(e.getReason())), e.getStatus());
     }
 }
