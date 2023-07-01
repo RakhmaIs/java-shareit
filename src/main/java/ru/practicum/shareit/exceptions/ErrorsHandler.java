@@ -14,22 +14,22 @@ import java.util.Objects;
 @RestControllerAdvice
 public class ErrorsHandler {
 
+    private static final String ERROR = "error";
+
     @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleUserNotFoundExc(final RuntimeException e) {
-        return Map.of("error", e.getMessage()
-        );
+        return Map.of(ERROR, e.getMessage());
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleDuplicateEmailExc(final RuntimeException e) {
-        return Map.of("error", e.getMessage()
-        );
+        return Map.of(ERROR, e.getMessage());
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<?> handleResponseStatusExc(final ResponseStatusException e) {
-        return new ResponseEntity<>(Map.of("error", Objects.requireNonNull(e.getReason())), e.getStatus());
+        return new ResponseEntity<>(Map.of(ERROR, Objects.requireNonNull(e.getReason())), e.getStatus());
     }
 }

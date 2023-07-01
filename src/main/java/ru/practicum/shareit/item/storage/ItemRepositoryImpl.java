@@ -47,27 +47,26 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item updateItem(Item item, Long userId, Long itemId) {
         Item oldItem = itemsMap.get(itemId);
-
-        if (itemsMap.containsKey(itemId)) {
-            if (!Objects.equals(oldItem.getOwnerId(), userId)) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId в Item не совпадает с приходящим");
-            }
-            if (item.getName() != null && !item.getName().isBlank()) {
-                oldItem.setName(item.getName());
-            }
-            if (item.getDescription() != null && !item.getDescription().isBlank()) {
-                oldItem.setDescription(item.getDescription());
-            }
-            if (item.getAvailable() != null) {
-                oldItem.setAvailable(item.getAvailable());
-            }
-            log.info("Получен и успешно выполнен запрос на обновление вещи : {} ", oldItem);
-            return oldItem;
+        if (!itemsMap.containsKey(itemId)) {
+            log.warn("Получен запрос обновление вещи с id = {}, но такой вещи не найдено", itemId);
+            throw new ItemNotFoundException("Вещь не найдена");
         }
-        log.warn("Получен запрос обновление вещи с id = {}, но такой вещи не найдено", itemId);
-        throw new ItemNotFoundException("Вещь не найдена");
+        if (!Objects.equals(oldItem.getOwnerId(), userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserId в Item не совпадает с приходящим");
+        }
+        if (item.getName() != null && !item.getName().isBlank()) {
+            oldItem.setName(item.getName());
+        }
+        if (item.getDescription() != null && !item.getDescription().isBlank()) {
+            oldItem.setDescription(item.getDescription());
+        }
+        if (item.getAvailable() != null) {
+            oldItem.setAvailable(item.getAvailable());
+        }
+        log.info("Получен и успешно выполнен запрос на обновление вещи : {} ", oldItem);
+        return oldItem;
     }
-
+    
 
     @Override
     public Item deleteById(Long id) {

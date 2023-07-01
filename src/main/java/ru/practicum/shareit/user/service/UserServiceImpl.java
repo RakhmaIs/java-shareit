@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        if (checkEmail(userDto.getEmail())) {
+        if (checkEmail(userDto.getEmail(), userDto.getId())) {
             throw new DuplicateEmailException("Обнаружен дубликат email создание пользователя невозможно");
         }
         return UserMapper.toUserDto(userRepository.createUser(UserMapper.toUser(userDto)));
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
-        if (checkEmailForUpdate(userDto.getEmail(), id)) {
+        if (checkEmail(userDto.getEmail(), id)) {
             throw new DuplicateEmailException("Обнаружен дубликат email создание пользователя невозможно");
         }
         return UserMapper.toUserDto(userRepository.updateUser(id, UserMapper.toUser(userDto)));
@@ -49,11 +49,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toUserDto(userRepository.readUser(id));
     }
 
-    private boolean checkEmail(String email) {
-        return userRepository.readUsers().stream().anyMatch(users -> email.equals(users.getEmail()));
-    }
-
-    private boolean checkEmailForUpdate(String email, Long userId) {
+    private boolean checkEmail(String email, Long userId) {
         return userRepository.readUsers().stream().filter(user -> !user.getId().equals(userId)).anyMatch(user -> user.getEmail().equals(email));
     }
 }

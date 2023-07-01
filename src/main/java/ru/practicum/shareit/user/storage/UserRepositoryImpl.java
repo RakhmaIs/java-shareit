@@ -26,20 +26,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public User updateUser(Long id, User user) {
-        if (usersMap.containsKey(id)) {
-            User updatedUser = usersMap.get(id);
-            if (user.getEmail() != null && !user.getEmail().isBlank()) {
-                updatedUser.setEmail(user.getEmail());
-            }
-            if (user.getName() != null && !user.getName().isBlank()) {
-                updatedUser.setName(user.getName());
-            }
-            log.info("Пользователь " + user + " успешно обновлен");
-            return updatedUser;
+        if (!usersMap.containsKey(id)) {
+            log.warn("Ошибка обновления пользователя");
+            throw new UserNotFoundException("User с id = " + id + " не найден. Обновление невозмоно");
         }
-        log.warn("Ошибка обновления пользователя");
-        throw new UserNotFoundException("User с id = " + id + " не найден. Обновление невозмоно");
+        User updatedUser = usersMap.get(id);
+        if (user.getEmail() != null && !user.getEmail().isBlank()) {
+            updatedUser.setEmail(user.getEmail());
+        }
+        if (user.getName() != null && !user.getName().isBlank()) {
+            updatedUser.setName(user.getName());
+        }
+        log.info("Пользователь " + user + " успешно обновлен");
+        return updatedUser;
     }
+
 
     @Override
     public List<User> readUsers() {
@@ -51,17 +52,17 @@ public class UserRepositoryImpl implements UserRepository {
         if (usersMap.containsKey(id)) {
             log.info("Пользователь c id " + id + " успешно обновлен");
             return usersMap.remove(id);
-        } else {
-            throw new UserNotFoundException("User с id = " + id + " не найден. Удаление невозмоно");
         }
+        throw new UserNotFoundException("User с id = " + id + " не найден. Удаление невозмоно");
     }
+
 
     @Override
     public User readUser(Long id) {
         if (usersMap.containsKey(id)) {
             return usersMap.get(id);
-        } else {
-            throw new UserNotFoundException("User с id = " + id + " не найден. Удаление невозмоно");
         }
+        throw new UserNotFoundException("User с id = " + id + " не найден. Удаление невозмоно");
     }
 }
+
