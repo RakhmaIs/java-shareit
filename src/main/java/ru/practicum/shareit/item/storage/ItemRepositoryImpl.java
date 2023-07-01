@@ -66,7 +66,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         log.info("Получен и успешно выполнен запрос на обновление вещи : {} ", oldItem);
         return oldItem;
     }
-    
 
     @Override
     public Item deleteById(Long id) {
@@ -77,7 +76,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         log.warn("Получен запрос удаление вещи с id = {}, но такой вещи не найдено", id);
         throw new ItemNotFoundException("Вещь не найдена");
     }
-
 
     @Override
     public List<Item> search(String text) {
