@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Validated(Create.class) @RequestBody UserDto userDto, BindingResult bindingResult) {//<<< не смог сделать без bindingResult так и не понял почему если увидишь оставь пож-та комментарий
+    public ResponseEntity<UserDto> createUser(@Validated(Create.class) @RequestBody UserDto userDto, BindingResult bindingResult) { //<<< не смог сделать без bindingResult так и не понял почему если увидишь оставь пож-та комментарий
         if (bindingResult.hasErrors()) {
             log.error("Не удалось выполнить запрос создание пользователя: {} , email: {} не прошёл валидацию или не уникален", userDto, userDto.getEmail());
             return ResponseEntity.badRequest().body(userDto);

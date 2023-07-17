@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
             log.info("Успешно выполнен запрос на частичное обновление пользователя с id = {}", id);
             return toUserDto(userRepository.saveAndFlush(updatedUser));
         } catch (DataIntegrityViolationException e) {
-            log.error("Не удалось выполнить запрос  на частичное обновление пользователя пользователя = {}, email = {} не уникален"
-                    , userDto, userDto.getEmail());
+            log.error("Не удалось выполнить запрос  на частичное обновление пользователя пользователя = {}, email = {} не уникален",
+                    userDto, userDto.getEmail());
             throw new AlreadyExistException("Пользователь с email = " + userDto.getEmail() + " уже существует.");
         }
     }
