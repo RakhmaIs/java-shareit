@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.booking.controller.BookingController;
+import ru.practicum.shareit.item.ItemController;
+import ru.practicum.shareit.user.UserController;
 
 import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = {UserController.class, ItemController.class, BookingController.class})
 public class ErrorsHandler {
 
     private static final String ERROR = "error";
