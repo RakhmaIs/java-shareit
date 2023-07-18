@@ -17,7 +17,7 @@ import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -56,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
                     log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе createItem", userId);
                     return new UserNotFoundException("Пользователь с id " + userId + " не найден. Невозможно создать вещь");
                 });
-        ItemDto item = ItemMapper.toItem(itemDto, user);
+        Item item = ItemMapper.toItem(itemDto, user);
         log.info("Успешно выполнен запрос на создание вещи {}", itemDto);
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
@@ -64,13 +64,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemResponseDto> readItemsOwnedByUserId(Long userId) {
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
-        List<ItemDto> items = itemRepository.findItemsByOwnerIdOrderByIdAsc(userId);
+        List<Item> items = itemRepository.findItemsByOwnerIdOrderByIdAsc(userId);
         userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе readItemsOwnedByUserId", userId);
                     return new UserNotFoundException("Пользователь не найден");
                 });
-        for (ItemDto item : items) {
+        for (Item item : items) {
             List<CommentResponseDto> comments = CommentMapper
                     .toListComment(commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId()));
             itemResponseDtoList.add(toItemResponseDto(item,
@@ -85,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto readItemByItemIdAndUserId(Long itemId, Long userId) {
-        ItemDto item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Вещь не найдена"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Вещь не найдена"));
         List<CommentResponseDto> comments = CommentMapper.toListComment(commentRepository.findAllByItemIdOrderByCreatedDesc(itemId));
         ItemResponseDto itemResponseDto = toItemResponseDto(item, null, null, comments);
 
@@ -117,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
                     log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе updateItem", userId);
                     return new UserNotFoundException("Пользователь не найден");
                 });
-        ItemDto item = itemRepository.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о вещи по id = {} в методе updateItem", itemId);
                     return new ItemNotFoundException("Вещь с id = " + itemId + " не найдена");
@@ -161,7 +161,7 @@ public class ItemServiceImpl implements ItemService {
                     log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе createComment", userId);
                     return new UserNotFoundException("Пользователь не найден");
                 });
-        ItemDto item = itemRepository.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о вещи по id = {} в методе createComment", itemId);
                     return new ItemNotFoundException("Вещь не найдена");

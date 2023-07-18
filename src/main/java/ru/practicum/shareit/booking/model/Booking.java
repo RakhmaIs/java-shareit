@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.shareit.booking.status.BookingStatus;
-import ru.practicum.shareit.item.model.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public class Booking {
     @JoinColumn(name = "item_id", nullable = false)
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ItemDto item;
+    private Item item;
     @JoinColumn(name = "booker_id", nullable = false)
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -15,14 +15,13 @@ import javax.persistence.*;
 @Table(name = "items")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
     private Long id;
     @Column(name = "item_name", nullable = false)
     private String name;
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.EAGER)
     private User owner;

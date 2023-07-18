@@ -26,12 +26,12 @@ public class Comment {
     @JoinColumn(name = "item_id", nullable = false)
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ItemDto item;
+    private Item item;
     @JoinColumn(name = "user_id")
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-    @Column(name = "created", columnDefinition = "Timestamp")
+    @Column(name = "created", columnDefinition = "timestamp")
     @Builder.Default
     private LocalDateTime created = LocalDateTime.now();
 

@@ -4,7 +4,7 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
-import ru.practicum.shareit.item.model.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class ItemMapper {
 
     }
 
-    public static ru.practicum.shareit.item.dto.ItemDto toItemDto(ItemDto item) {
+    public static ru.practicum.shareit.item.dto.ItemDto toItemDto(Item item) {
         return item != null ?
                 ru.practicum.shareit.item.dto.ItemDto.builder()
                         .id(item.getId())
@@ -27,9 +27,9 @@ public class ItemMapper {
                         .build() : null;
     }
 
-    public static ItemDto toItem(ru.practicum.shareit.item.dto.ItemDto itemDto, User owner) {
+    public static Item toItem(ru.practicum.shareit.item.dto.ItemDto itemDto, User owner) {
         return itemDto != null ?
-                ItemDto.builder()
+                Item.builder()
                         .id(itemDto.getId())
                         .name(itemDto.getName())
                         .description(itemDto.getDescription())
@@ -39,11 +39,11 @@ public class ItemMapper {
                         .build() : null;
     }
 
-    public static List<ru.practicum.shareit.item.dto.ItemDto> toItemListDto(List<ItemDto> itemList) {
+    public static List<ru.practicum.shareit.item.dto.ItemDto> toItemListDto(List<Item> itemList) {
         return itemList.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
-    public static ItemResponseDto toItemResponseDto(ItemDto item,
+    public static ItemResponseDto toItemResponseDto(Item item,
                                                     Booking lastBooking,
                                                     Booking nextBooking,
                                                     List<CommentResponseDto> comments) {

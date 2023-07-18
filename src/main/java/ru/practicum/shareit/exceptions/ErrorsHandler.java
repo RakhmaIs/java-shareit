@@ -47,8 +47,9 @@ public class ErrorsHandler {
 
 
     @ExceptionHandler(AlreadyExistException.class)
-    public ResponseEntity<?> handleThrowable(final RuntimeException e) {
+    public ResponseEntity<?> handleAlreadyExistsExc(final RuntimeException e) {
         return new ResponseEntity<>(ERROR, HttpStatus.CONFLICT);
     }
+
 }
 
