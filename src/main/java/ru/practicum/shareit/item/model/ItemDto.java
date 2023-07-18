@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "items")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class ItemDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")

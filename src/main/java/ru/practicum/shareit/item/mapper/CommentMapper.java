@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.mapper;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class CommentMapper {
                         .build() : null;
     }
 
-    public static Comment fromRequestDto(CommentRequestDto commentRequestDto, Item item, User user, LocalDateTime now) {
+    public static Comment fromRequestDto(CommentRequestDto commentRequestDto, ItemDto item, User user, LocalDateTime now) {
         return commentRequestDto != null ?
                 Comment.builder()
                         .text(commentRequestDto.getText())

@@ -21,7 +21,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto, @RequestHeader("X-Sharer-User-Id") Long id, BindingResult bindingResult) {
+    public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto, @RequestHeader("X-Sharer-User-Id") Long id, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -29,7 +29,7 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<?> approveBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId, @RequestParam(name = "approved", required = false) Boolean approved) {
+    public ResponseEntity<BookingDto> approveBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId, @RequestParam(name = "approved", required = false) Boolean approved) {
         return new ResponseEntity<>(bookingService.approve(bookingId, userId, approved), HttpStatus.OK);
     }
 
@@ -45,8 +45,8 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<?> getOwnerStuffBookings(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                                                   @RequestParam(defaultValue = "ALL") String state) {
+    public ResponseEntity<List<BookingDto>> getOwnerStuffBookings(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                                                  @RequestParam(defaultValue = "ALL") String state) {
         return new ResponseEntity<>(bookingService.getAllByOwner(ownerId, state), HttpStatus.OK);
     }
 

@@ -14,7 +14,7 @@ import ru.practicum.shareit.exceptions.BookingNotAvailableException;
 import ru.practicum.shareit.exceptions.BookingNotFoundException;
 import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemDto;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto create(BookingRequestDto bookingRequestDto, Long userId) {
-        Item item = itemRepository
+        ItemDto item = itemRepository
                 .findById(bookingRequestDto.getItemId())
                 .orElseThrow(() -> new ItemNotFoundException("Вещь не найдена"));
 
@@ -161,7 +161,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Бронирование не найдено"));
-        Item item = itemRepository.findById(booking.getId())
+        ItemDto item = itemRepository.findById(booking.getId())
                 .orElseThrow(() -> new ItemNotFoundException("Вещь не найдена"));
         if (!item.getOwner().getId().equals(userId) && !booking.getBooker().getId().equals(userId)) {
             throw new UserNotFoundException("Id владельца вещи или id арендатора не совпадают с входящим параметром");
