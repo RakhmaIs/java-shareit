@@ -13,6 +13,7 @@ import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -65,11 +66,10 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemResponseDto> readItemsOwnedByUserId(Long userId) {
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
         List<Item> items = itemRepository.findItemsByOwnerIdOrderByIdAsc(userId);
-        userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе readItemsOwnedByUserId", userId);
-                    return new UserNotFoundException("Пользователь не найден");
-                });
+        if (!userRepository.existsById(userId)) {
+            log.error("Не выполнен запрос на получение информации о вещах, которыми владеет пользователь с id = {} ", userId);
+            throw new UserNotFoundException("Пользователь не найден");
+        }
         for (Item item : items) {
             List<CommentResponseDto> comments = CommentMapper
                     .toListComment(commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId()));
@@ -111,12 +111,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ru.practicum.shareit.item.dto.ItemDto updateItem(ru.practicum.shareit.item.dto.ItemDto itemDto, Long userId, Long itemId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе updateItem", userId);
-                    return new UserNotFoundException("Пользователь не найден");
-                });
+    public ItemDto updateItem(ItemDto itemDto, Long userId, Long itemId) {
+        if (!userRepository.existsById(userId)) {
+            log.error("Не выполнен запрос на обновление информации о вещи по id владельца = {}. Пользователя с таким id не существует.", userId);
+            throw new UserNotFoundException("Пользователь не найден");
+        }
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о вещи по id = {} в методе updateItem", itemId);
@@ -139,10 +138,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void deleteById(Long itemId) {
-        itemRepository.findById(itemId).orElseThrow(() -> {
+        if (!itemRepository.existsById(itemId)) {
             log.error("Не выполнен запрос на получение информации о вещи по id = {} в методе deleteById", itemId);
-            return new ItemNotFoundException("Вещь не найдена");
-        });
+            throw new ItemNotFoundException("Вещь не найдена");
+        }
+        log.info("Успешно выполнен запрос на удаление информации о вещи по id = {} в методе deleteById", itemId);
         itemRepository.deleteById(itemId);
     }
 

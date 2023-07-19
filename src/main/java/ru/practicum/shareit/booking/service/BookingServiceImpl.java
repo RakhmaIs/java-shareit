@@ -67,8 +67,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto approve(Long bookingId, Long userId, Boolean approved) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("Пользователь не найден");
+        }
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new UserNotFoundException("Бронирование не найдено"));
 
@@ -86,6 +87,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.toBookingDto(bookingRepository.save(booking));
 
     }
+
 
     @Override
     public List<BookingDto> getAllByOwner(Long ownerId, String state) {
@@ -157,8 +159,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto getByIdAndBookerId(Long bookingId, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("Пользователь не найден");
+        }
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Бронирование не найдено"));
         Item item = itemRepository.findById(booking.getId())
