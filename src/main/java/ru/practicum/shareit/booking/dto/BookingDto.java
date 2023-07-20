@@ -1,24 +1,27 @@
 package ru.practicum.shareit.booking.dto;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Builder;
+import lombok.Data;
 import ru.practicum.shareit.booking.status.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
+
+@Data
+@Builder
 public class BookingDto {
-    @Positive(message = "id не может быть отрицательным")
+
     private Long id;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
     private LocalDateTime start;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
+    @Future
     private LocalDateTime end;
     private Item item;
     private User booker;
-    private BookingStatus bookingStatus;
+    private BookingStatus status;
 }

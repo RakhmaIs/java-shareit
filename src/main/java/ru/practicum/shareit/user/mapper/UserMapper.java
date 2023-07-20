@@ -31,6 +31,14 @@ public class UserMapper {
                         .build() : null;
     }
 
+    public static User fromUserDtoWithId(Long id, UserDto userDto) {
+        return User.builder()
+                .id(id)
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .build();
+    }
+
     public static List<UserDto> toListUsersDto(Collection<User> users) {
         List<UserDto> usersDto = new ArrayList<>();
         for (User user : users) {

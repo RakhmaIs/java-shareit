@@ -1,20 +1,34 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Builder;
-import lombok.Data;
-import ru.practicum.shareit.request.model.ItemRequest;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import ru.practicum.shareit.user.model.User;
 
-/**
- * TODO Sprint add-controllers.
- */
-@Data
+import javax.persistence.*;
+
+
 @Builder
+@Getter
+@Setter
+@Entity
+@Table(name = "items")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "item_name", nullable = false)
     private String name;
-    private Long ownerId;
+    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User owner;
+    @Column(name = "item_description")
     private String description;
+    @Column(nullable = false)
     private Boolean available;
-    private ItemRequest request;
-
+    @Column(name = "request_id")
+    private Long requestId;
 }

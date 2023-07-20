@@ -1,55 +1,97 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.DuplicateEmailException;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exceptions.AlreadyExistException;
+import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.storage.UserRepositoryImpl;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 
-@Service
-public class UserServiceImpl implements UserService {
-    private final UserRepositoryImpl userRepository;
+import static ru.practicum.shareit.user.mapper.UserMapper.toUserDto;
 
-    @Autowired
-    public UserServiceImpl(UserRepositoryImpl userRepository) {
-        this.userRepository = userRepository;
-    }
+@Service
+@Slf4j
+@Transactional
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        if (checkEmail(userDto.getEmail(), userDto.getId())) {
-            throw new DuplicateEmailException("Обнаружен дубликат email создание пользователя невозможно");
+        try {
+            UserDto createdUser = UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+            log.info("Успешно выполнен запрос на создание пользователя {}", userDto);
+            return createdUser;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Не удалось выполнить запрос  на создание пользователя = {}", userDto);
+            throw new AlreadyExistException("Пользователь с email = " + userDto.getEmail() + " уже существует.");
         }
-        return UserMapper.toUserDto(userRepository.createUser(UserMapper.toUser(userDto)));
     }
 
-    @Override
-    public List<UserDto> readUsers() {
-        return UserMapper.toListUsersDto(userRepository.readUsers());
-    }
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
-        if (checkEmail(userDto.getEmail(), id)) {
-            throw new DuplicateEmailException("Обнаружен дубликат email создание пользователя невозможно");
+        try {
+            User updatedUser = userRepository.findById(id)
+                    .orElseThrow(() -> {
+                        log.error("Не удалось выполнить запрос на частичное обновление пользователя с id = {} ", id);
+                        return new UserNotFoundException("Невозможно обновить данные пользователя с id =  " + id +
+                                " - пользователь с таким id не найден в базе.");
+                    });
+
+            if (userDto.getEmail() != null && !userDto.getEmail().isBlank()) {
+                updatedUser.setEmail(userDto.getEmail());
+            }
+            if (userDto.getName() != null && !userDto.getName().isBlank()) {
+                updatedUser.setName(userDto.getName());
+            }
+            log.info("Успешно выполнен запрос на частичное обновление пользователя с id = {}", id);
+            return toUserDto(userRepository.saveAndFlush(updatedUser));
+        } catch (DataIntegrityViolationException e) {
+            log.error("Не удалось выполнить запрос  на частичное обновление пользователя пользователя = {}, email = {} не уникален",
+                    userDto, userDto.getEmail());
+            throw new AlreadyExistException("Пользователь с email = " + userDto.getEmail() + " уже существует.");
         }
-        return UserMapper.toUserDto(userRepository.updateUser(id, UserMapper.toUser(userDto)));
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<UserDto> readUsers() {
+        List<UserDto> allUsers = UserMapper.toListUsersDto(userRepository.findAll());
+        log.info("Успешно выполнен запрос на получение информации обо всех пользователях");
+        return allUsers;
+    }
+
 
     @Override
-    public UserDto deleteUser(Long id) {
-        return UserMapper.toUserDto(userRepository.deleteUser(id));
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            log.error("Не удалось выполнить запрос  на удаление пользователя c id = {}", id);
+            throw new UserNotFoundException("Пользователь с id " + id + " не найден. Удаление невозможно.");
+        }
+        log.info("Успешно выполнен запрос  на удаление пользователя c id = {}", id);
+        userRepository.deleteById(id);
     }
+
 
     @Override
-    public UserDto getUser(Long id) {
-        return UserMapper.toUserDto(userRepository.readUser(id));
-    }
+    public UserDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Ошибка при получении информации о пользователе с id = {}", id);
+                    return new UserNotFoundException("Пользователь с id " + id + " не найден");
+                });
 
-    private boolean checkEmail(String email, Long userId) {
-        return userRepository.readUsers().stream().filter(user -> !user.getId().equals(userId)).anyMatch(user -> user.getEmail().equals(email));
+        log.info("Успешно выполнен запрос на получение информации о пользователя с id = {}", id);
+        return toUserDto(user);
     }
 }
+
