@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.AlreadyExistException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistException("Пользователь с email = " + userDto.getEmail() + " уже существует.");
         }
     }
-
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {

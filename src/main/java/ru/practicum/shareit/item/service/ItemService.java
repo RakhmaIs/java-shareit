@@ -8,9 +8,9 @@ import ru.practicum.shareit.item.dto.ItemResponseDto;
 import java.util.List;
 
 public interface ItemService {
-    ItemDto createItem(ItemDto itemDto, Long userId);
+    ItemDto createItem(ItemDto itemDto, Long userId, Long requestId);
 
-    List<ItemResponseDto> readItemsOwnedByUserId(Long userId);
+    List<ItemResponseDto> readItemsOwnedByUserId(Long userId, Integer from, Integer size);
 
     ItemResponseDto readItemByItemIdAndUserId(Long itemId, Long userId);
 
@@ -18,8 +18,10 @@ public interface ItemService {
 
     void deleteById(Long itemId);
 
-    List<ItemDto> search(String text);
+    List<ItemDto> search(String text, Integer from, Integer size);
 
     CommentResponseDto createComment(Long userId, Long itemId, CommentRequestDto commentRequestDto);
+
+    List<ItemDto> findAllItemByRequest(Long requestId);
 
 }
