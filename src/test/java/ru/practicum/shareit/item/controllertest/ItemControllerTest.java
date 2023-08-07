@@ -34,11 +34,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.util.Constants.USER_ID;
 
 @WebMvcTest(controllers = {ItemController.class})
 @AutoConfigureMockMvc
 class ItemControllerTest {
-    String HEADER_USER_ID = "X-Sharer-User-Id";
+
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -68,7 +69,7 @@ class ItemControllerTest {
         when(itemService.readItemsOwnedByUserId(anyLong(), anyInt(), anyInt())).thenReturn(List.of());
 
         mockMvc.perform(get("/items")
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .param("from", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -85,7 +86,7 @@ class ItemControllerTest {
 
 
         mockMvc.perform(get("/items")
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .param("from", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -101,7 +102,7 @@ class ItemControllerTest {
         when(itemService.readItemByItemIdAndUserId(anyLong(), anyLong())).thenReturn(itemResponseDto);
 
         mockMvc.perform(get("/items/{itemId}", 1L)
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(itemResponseDto)))
@@ -116,7 +117,7 @@ class ItemControllerTest {
         when(itemService.createItem(any(), anyLong(), anyLong())).thenReturn(itemDto);
 
         mockMvc.perform(post("/items")
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .param("requestId", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(itemDto)))
@@ -132,7 +133,7 @@ class ItemControllerTest {
         when(itemService.updateItem(any(), anyLong(), anyLong())).thenReturn(itemDto);
 
         mockMvc.perform(patch("/items/{itemId}", 1L)
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -192,7 +193,7 @@ class ItemControllerTest {
         when(itemService.createComment(anyLong(), anyLong(), any())).thenReturn(commentResponseDto);
 
         mockMvc.perform(post("/items/{itemId}/comment", 1L)
-                        .header(HEADER_USER_ID, 1L)
+                        .header(USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(commentRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -11,13 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exceptions.ItemRequestNotFoundException;
-import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestPostDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.user.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

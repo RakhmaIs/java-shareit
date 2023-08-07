@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class AlreadyExistExceptionTest {
     @Test
-    void TestAlreadyExistException() {
+    void testAlreadyExistException() {
         String s = "AlreadyExistException";
         UserNotFoundException exception = new UserNotFoundException(s);
         assertThat(exception.getMessage(), equalTo(s));

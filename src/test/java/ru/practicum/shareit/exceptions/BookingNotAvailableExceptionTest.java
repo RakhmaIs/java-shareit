@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class BookingNotAvailableExceptionTest {
     @Test
-    void TestBookingNotAvailableException() {
+    void testBookingNotAvailableException() {
         String s = "BookingNotAvailableException";
         UserNotFoundException exception = new UserNotFoundException(s);
         assertThat(exception.getMessage(), equalTo(s));

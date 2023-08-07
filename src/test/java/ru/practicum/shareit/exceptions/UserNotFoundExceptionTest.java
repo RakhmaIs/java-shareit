@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class UserNotFoundExceptionTest {
 
     @Test
-    void UserNotFoundException() {
+    void userNotFoundException() {
         String s = "Not found.";
         UserNotFoundException exception = new UserNotFoundException(s);
 
