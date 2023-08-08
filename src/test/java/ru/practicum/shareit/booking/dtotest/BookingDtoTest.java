@@ -12,9 +12,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.util.Constants.DATE_TIME_FORMATTER;
 
 @JsonTest
 class BookingDtoTest {
@@ -50,8 +50,8 @@ class BookingDtoTest {
                         .build())
                 .build();
 
-        String formatStart = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        String formatStart = start.format(DATE_TIME_FORMATTER);
+        String formatEnd = end.format(DATE_TIME_FORMATTER);
 
         JsonContent<BookingDto> result = json.write(bookingDto);
 

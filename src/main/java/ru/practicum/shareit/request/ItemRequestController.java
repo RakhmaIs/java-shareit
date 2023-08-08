@@ -39,10 +39,10 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ItemRequestDto>> readAllOtherItemRequests(@RequestHeader(name = USER_ID) Long requesterId,
-                                                                         @RequestParam(name = "from", required = false)
-                                                                         Integer from,
-                                                                         @RequestParam(name = "size", required = false)
-                                                                         Integer size) {
+                                                                         @RequestParam(name = "from", required = false,
+                                                                                 defaultValue = "0") Integer from,
+                                                                         @RequestParam(name = "size", required = false,
+                                                                                 defaultValue = "10") Integer size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.readAllOtherItemRequests(requesterId, from, size));

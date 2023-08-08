@@ -39,8 +39,8 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<ItemResponseDto>> readAllByOwnerId(@RequestHeader(USER_ID) Long userId,
-                                                         @RequestParam(name = "from", required = false) Integer from,
-                                                         @RequestParam(name = "size", required = false) Integer size) {
+                                                                  @RequestParam(name = "from", required = false) Integer from,
+                                                                  @RequestParam(name = "size", required = false) Integer size) {
         log.info("Получен запрос на получение всех пользователей.");
         return new ResponseEntity<>(itemService.readItemsOwnedByUserId(userId, from, size), HttpStatus.OK);
     }
@@ -52,7 +52,8 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto, @RequestHeader(USER_ID) Long userId, @PathVariable Long itemId) {
+    public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto, @RequestHeader(USER_ID) Long userId,
+                                              @PathVariable Long itemId) {
         log.info("Получен запрос на обновление item : {}.", itemDto);
         return new ResponseEntity<>(itemService.updateItem(itemDto, userId, itemId), HttpStatus.OK);
     }
@@ -66,8 +67,10 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> search(@RequestParam String text,
-                                                @RequestParam(name = "from", required = false) Integer from,
-                                                @RequestParam(name = "size", required = false) Integer size) {
+                                                @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                Integer from,
+                                                @RequestParam(name = "size", required = false, defaultValue = "10")
+                                                Integer size) {
         return new ResponseEntity<>(itemService.search(text, from, size), HttpStatus.OK);
     }
 

@@ -35,7 +35,6 @@ class UserRepositoryTest {
     @Test
     void existsUserByIdShouldReturnTrue() {
         List<User> all = userRepository.findAll();
-
         assertTrue(userRepository.existsById(all.get(0).getId()));
     }
 

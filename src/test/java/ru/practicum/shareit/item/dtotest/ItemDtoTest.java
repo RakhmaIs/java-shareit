@@ -14,10 +14,10 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.util.Constants.DATE_TIME_FORMATTER;
 
 
 @JsonTest
@@ -30,8 +30,8 @@ class ItemDtoTest {
     void testSerialize() {
         LocalDateTime created = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
-        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        String formatCreated = created.format(DATE_TIME_FORMATTER);
+        String formatEnd = end.format(DATE_TIME_FORMATTER);
         ItemDto build = ItemDto.builder()
                 .id(1L)
                 .name("name")

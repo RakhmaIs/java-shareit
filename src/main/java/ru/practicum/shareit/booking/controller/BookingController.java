@@ -23,7 +23,8 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto, @RequestHeader(USER_ID) Long id, BindingResult bindingResult) {
+    public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto,
+                                                    @RequestHeader(USER_ID) Long id, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -31,7 +32,8 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<BookingDto> approveBooking(@RequestHeader(USER_ID) Long userId, @PathVariable Long bookingId, @RequestParam(name = "approved", required = false) Boolean approved) {
+    public ResponseEntity<BookingDto> approveBooking(@RequestHeader(USER_ID) Long userId, @PathVariable Long bookingId,
+                                                     @RequestParam(name = "approved", required = false) Boolean approved) {
         return new ResponseEntity<>(bookingService.approve(bookingId, userId, approved), HttpStatus.OK);
     }
 
@@ -42,16 +44,20 @@ public class BookingController {
 
     @GetMapping()
     public ResponseEntity<List<BookingDto>> getUserBookings(@RequestHeader(USER_ID) Long userId,
-                                                            @RequestParam(name = "from", required = false) Integer from,
-                                                            @RequestParam(name = "size", required = false) Integer size,
+                                                            @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                            Integer from,
+                                                            @RequestParam(name = "size", required = false, defaultValue = "10")
+                                                            Integer size,
                                                             @RequestParam(defaultValue = "ALL") String state) {
         return new ResponseEntity<>(bookingService.getAllByUser(userId, state, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingDto>> getOwnerStuffBookings(@RequestHeader(USER_ID) Long ownerId,
-                                                                  @RequestParam(name = "from", required = false) Integer from,
-                                                                  @RequestParam(name = "size", required = false) Integer size,
+                                                                  @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                                  Integer from,
+                                                                  @RequestParam(name = "size", required = false, defaultValue = "10")
+                                                                  Integer size,
                                                                   @RequestParam(defaultValue = "ALL") String state) {
         return new ResponseEntity<>(bookingService.getAllByOwner(ownerId, state, from, size), HttpStatus.OK);
     }
