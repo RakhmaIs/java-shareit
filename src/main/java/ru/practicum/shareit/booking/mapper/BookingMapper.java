@@ -22,6 +22,7 @@ public class BookingMapper {
                 .item(booking.getItem())
                 .build();
     }
+
     public static BookingResponseDto toBookingResponseDto(Booking booking) {
         return BookingResponseDto.builder()
                 .id(booking.getId())
