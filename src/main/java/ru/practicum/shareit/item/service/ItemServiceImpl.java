@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -28,10 +29,11 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static ru.practicum.shareit.item.mapper.ItemMapper.toItemDto;
-import static ru.practicum.shareit.item.mapper.ItemMapper.toItemResponseDto;
+import static ru.practicum.shareit.item.mapper.ItemMapper.*;
+import static ru.practicum.shareit.util.Pagination.getPaginationWithoutSort;
 
 @Slf4j
 @Service
@@ -51,21 +53,27 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ru.practicum.shareit.item.dto.ItemDto createItem(ru.practicum.shareit.item.dto.ItemDto itemDto, Long userId) {
+    public ItemDto createItem(ItemDto itemDto, Long userId, Long requestId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о пользователе по id = {} в методе createItem", userId);
                     return new UserNotFoundException("Пользователь с id " + userId + " не найден. Невозможно создать вещь");
                 });
+        if (requestId != null) {
+            itemDto.setRequestId(requestId);
+        }
         Item item = ItemMapper.toItem(itemDto, user);
         log.info("Успешно выполнен запрос на создание вещи {}", itemDto);
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
-    public List<ItemResponseDto> readItemsOwnedByUserId(Long userId) {
+    public List<ItemResponseDto> readItemsOwnedByUserId(Long userId, Integer from, Integer size) {
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
-        List<Item> items = itemRepository.findItemsByOwnerIdOrderByIdAsc(userId);
+        Pageable paginationWithoutSort = getPaginationWithoutSort(from, size);
+        List<Item> items = itemRepository.findItemsByOwnerIdOrderByIdAsc(userId, paginationWithoutSort)
+                .stream()
+                .collect(Collectors.toList());
         if (!userRepository.existsById(userId)) {
             log.error("Не выполнен запрос на получение информации о вещах, которыми владеет пользователь с id = {} ", userId);
             throw new UserNotFoundException("Пользователь не найден");
@@ -116,6 +124,7 @@ public class ItemServiceImpl implements ItemService {
             log.error("Не выполнен запрос на обновление информации о вещи по id владельца = {}. Пользователя с таким id не существует.", userId);
             throw new UserNotFoundException("Пользователь не найден");
         }
+
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     log.error("Не выполнен запрос на получение информации о вещи по id = {} в методе updateItem", itemId);
@@ -147,11 +156,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ru.practicum.shareit.item.dto.ItemDto> search(String text) {
+    public List<ItemDto> search(String text, Integer from, Integer size) {
         if (text == null || text.isBlank()) {
             return List.of();
         }
-        return ItemMapper.toItemListDto(itemRepository.search(text));
+        Pageable paginationWithoutSort = getPaginationWithoutSort(from, size);
+        return toItemListDto(itemRepository.search(text, paginationWithoutSort).stream().collect(Collectors.toList()));
     }
 
     @Override
@@ -180,12 +190,17 @@ public class ItemServiceImpl implements ItemService {
                 return CommentMapper.toResponseDto(commentRepository.save(comment));
             } else {
                 log.error("Не выполнен запрос на создание комментария");
-                throw new BookingNotAvailableException("Бронирование не подтверждена, не завершена или отклонена. Невозможно оставить комментарий.");
+                throw new BookingNotAvailableException("Бронирование не подтверждено, не завершено или отклонено. Невозможно оставить комментарий.");
             }
         } else {
             log.error("Не выполнен запрос на создание комментария");
             throw new BookingNotAvailableException("Бронирований у данного пользователя не найдено");
         }
+    }
+
+    @Override
+    public List<ItemDto> findAllItemByRequest(Long requestId) {
+        return toItemListDto(itemRepository.findAllByRequestId(requestId));
     }
 }
 

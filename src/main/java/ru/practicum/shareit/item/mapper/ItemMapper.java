@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.mapper;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -15,7 +16,7 @@ public class ItemMapper {
 
     }
 
-    public static ru.practicum.shareit.item.dto.ItemDto toItemDto(Item item) {
+    public static ItemDto toItemDto(Item item) {
         return item != null ?
                 ru.practicum.shareit.item.dto.ItemDto.builder()
                         .id(item.getId())
@@ -27,7 +28,7 @@ public class ItemMapper {
                         .build() : null;
     }
 
-    public static Item toItem(ru.practicum.shareit.item.dto.ItemDto itemDto, User owner) {
+    public static Item toItem(ItemDto itemDto, User owner) {
         return itemDto != null ?
                 Item.builder()
                         .id(itemDto.getId())
@@ -39,7 +40,7 @@ public class ItemMapper {
                         .build() : null;
     }
 
-    public static List<ru.practicum.shareit.item.dto.ItemDto> toItemListDto(List<Item> itemList) {
+    public static List<ItemDto> toItemListDto(List<Item> itemList) {
         return itemList.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 

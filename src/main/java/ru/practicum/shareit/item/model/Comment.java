@@ -34,5 +34,4 @@ public class Comment {
     @Column(name = "created", columnDefinition = "timestamp")
     @Builder.Default
     private LocalDateTime created = LocalDateTime.now();
-
 }

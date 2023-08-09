@@ -14,6 +14,8 @@ import ru.practicum.shareit.item.service.ItemService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.util.Constants.USER_ID;
+
 
 @RestController
 @RequestMapping("/items")
@@ -28,25 +30,30 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long id) {
+    public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto,
+                                              @RequestHeader(USER_ID) Long id,
+                                              @RequestParam(name = "requestId", required = false) Long requestId) {
         log.info("Получен запрос на добавление пользователя : {}.", itemDto);
-        return new ResponseEntity<>(itemService.createItem(itemDto, id), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemService.createItem(itemDto, id, requestId), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> readAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemResponseDto>> readAllByOwnerId(@RequestHeader(USER_ID) Long userId,
+                                                                  @RequestParam(name = "from", required = false) Integer from,
+                                                                  @RequestParam(name = "size", required = false) Integer size) {
         log.info("Получен запрос на получение всех пользователей.");
-        return new ResponseEntity<>(itemService.readItemsOwnedByUserId(userId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.readItemsOwnedByUserId(userId, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<ItemResponseDto> readById(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<ItemResponseDto> readById(@PathVariable Long itemId, @RequestHeader(USER_ID) Long userId) {
         log.info("Получен запрос на получение пользователя по id = " + itemId);
         return new ResponseEntity<>(itemService.readItemByItemIdAndUserId(itemId, userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
+    public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto, @RequestHeader(USER_ID) Long userId,
+                                              @PathVariable Long itemId) {
         log.info("Получен запрос на обновление item : {}.", itemDto);
         return new ResponseEntity<>(itemService.updateItem(itemDto, userId, itemId), HttpStatus.OK);
     }
@@ -59,12 +66,16 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> search(@RequestParam String text, @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return new ResponseEntity<>(itemService.search(text), HttpStatus.OK);
+    public ResponseEntity<List<ItemDto>> search(@RequestParam String text,
+                                                @RequestParam(name = "from", required = false, defaultValue = "0")
+                                                Integer from,
+                                                @RequestParam(name = "size", required = false, defaultValue = "10")
+                                                Integer size) {
+        return new ResponseEntity<>(itemService.search(text, from, size), HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long itemId, @RequestHeader(USER_ID) Long userId,
                                                             @Valid @RequestBody CommentRequestDto commentRequestDto) {
         return new ResponseEntity<>(itemService.createComment(userId, itemId, commentRequestDto), HttpStatus.OK);
     }
