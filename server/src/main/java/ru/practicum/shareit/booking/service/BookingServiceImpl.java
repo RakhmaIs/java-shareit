@@ -101,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
         }
         Page<Booking> bookings;
         log.error("getAllByOwner ---- ----- FROM ==== {} SIZE ====== {}", from, size);
-        Pageable pagWithoutSort = getPaginationWithoutSort(from, size);/*PageRequest.of(from/ size, size);*/
+        Pageable pagWithoutSort = getPaginationWithoutSort(from, size);
         switch (state.toUpperCase()) {
             case "ALL":
                 bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId, pagWithoutSort);
@@ -137,10 +137,10 @@ public class BookingServiceImpl implements BookingService {
         }
         Page<Booking> bookings;
         log.error("getAllByUser --------- FROM ==== {} SIZE ====== {}", from, size);
-        Pageable pagWithoutSort =getPaginationWithoutSort(from, size); /*PageRequest.of(from/ size, size);*/
+        Pageable pagWithoutSort = getPaginationWithoutSort(from, size);
         switch (state.toUpperCase()) {
             case "ALL":
-                bookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId,pagWithoutSort);
+                bookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId, pagWithoutSort);
                 break;
             case "CURRENT":
                 bookings = bookingRepository.findAllByBooker_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now(), LocalDateTime.now(), pagWithoutSort);
