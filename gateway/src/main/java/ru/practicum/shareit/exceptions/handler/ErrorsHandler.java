@@ -16,8 +16,7 @@ import java.util.Map;
 
 
 @Slf4j
-@RestControllerAdvice(basePackageClasses =
-        {UserClientController.class, ItemRequestClientController.class, ItemClientController.class, BookingController.class})
+@RestControllerAdvice(basePackageClasses = {UserClientController.class, ItemRequestClientController.class, ItemClientController.class, BookingController.class})
 public class ErrorsHandler {
 
 
