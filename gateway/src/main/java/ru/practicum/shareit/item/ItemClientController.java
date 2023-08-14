@@ -21,33 +21,33 @@ public class ItemClientController {
 
     @GetMapping
     public ResponseEntity<Object> readAllItems(@RequestHeader(name = "${headers.user.id.name}") Long userId,
-                                              @PositiveOrZero @RequestParam(name = "from", required = false,
-                                                      defaultValue = "0") Integer from,
-                                              @Positive @RequestParam(name = "size", required = false,
-                                                      defaultValue = "10") Integer size) {
+                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
+                                               Integer from,
+                                               @Positive @RequestParam(name = "size", defaultValue = "10")
+                                               Integer size) {
         log.info("Get all items, userId={}, from={}, size={}", userId, from, size);
         return itemClient.getAllItems(userId, from, size);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> readItemById(@RequestHeader(name = "${headers.user.id.name}") Long userId,
-                                              @PathVariable Long itemId) {
+                                               @PathVariable Long itemId) {
         log.info("Get item by id, userId={}, itemId={}", userId, itemId);
         return itemClient.getItemById(userId, itemId);
     }
 
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
-                                          @RequestParam(name = "requestId", required = false) Long requestId,
-                                          @RequestBody @Valid ItemDto itemDto) {
+                                             @RequestParam(name = "requestId", required = false) Long requestId,
+                                             @RequestBody @Valid ItemDto itemDto) {
         log.info("Add item, userId={}, requestId={}, itemDto={}", userId, requestId, itemDto);
         return itemClient.createItem(userId, itemDto, requestId);
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
-                                            @PathVariable Long itemId,
-                                            @RequestBody ItemDto itemDto) {
+                                             @PathVariable Long itemId,
+                                             @RequestBody ItemDto itemDto) {
 
         log.info("Update item, userId={}, itemId={}, itemDto={}", userId, itemId, itemDto);
         return itemClient.updateItem(itemId, userId, itemDto);
@@ -62,21 +62,21 @@ public class ItemClientController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItem(@RequestParam String text,
-                                                    @RequestHeader(name = "${headers.user.id.name}") Long userid,
-                                                    @PositiveOrZero @RequestParam(name = "from",
-                                                            required = false, defaultValue = "0")
-                                                    Integer from,
-                                                    @Positive @RequestParam(name = "size",
-                                                            required = false, defaultValue = "10")
-                                                    Integer size) {
+                                             @RequestHeader(name = "${headers.user.id.name}") Long userid,
+                                             @PositiveOrZero @RequestParam(name = "from",
+                                                     required = false, defaultValue = "0")
+                                             Integer from,
+                                             @Positive @RequestParam(name = "size",
+                                                     required = false, defaultValue = "10")
+                                             Integer size) {
         log.info("Search items by text, text={}, from={}, size={}", text, from, size);
         return itemClient.search(text, userid, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader(name = "${headers.user.id.name}") Long userId,
-                                             @PathVariable Long itemId,
-                                             @RequestBody @Valid CommentRequestDto commentRequestDto) {
+                                                @PathVariable Long itemId,
+                                                @RequestBody @Valid CommentRequestDto commentRequestDto) {
         log.info("Add comment, userId={}, itemId={}, commentRequestDto={}", userId, itemId, commentRequestDto);
         return itemClient.createComment(userId, itemId, commentRequestDto);
     }

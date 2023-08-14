@@ -109,60 +109,6 @@ class BookingControllerTest {
                 .andReturn();
     }
 
-/*    @Test
-    @SneakyThrows
-    void createBookingShouldReturnStatusBadRequestWhenDataHasNoItemId() {
-        BookingRequestDto createDto = BookingRequestDto.builder()
-                .end(LocalDateTime.now().plusHours(1))
-                .start(LocalDateTime.now())
-                .build();
-
-        when(bookingService.create(any(), anyLong())).thenThrow(BookingNotAvailableException.class);
-
-        mockMvc.perform(post("/bookings")
-                        .header(USER_ID, 1L)
-                        .content(objectMapper.writeValueAsString(createDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andReturn();
-    }*/
-
-/*    @Test
-    @SneakyThrows
-    void createBookingWhenShouldReturnStatusBadRequestWhenDataHasNoStartAndEndDate() {
-        BookingRequestDto createDto = BookingRequestDto.builder()
-                .itemId(1L)
-                .build();
-
-        when(bookingService.create(any(), anyLong())).thenThrow(BookingNotAvailableException.class);
-
-        mockMvc.perform(post("/bookings")
-                        .header(USER_ID, 1L)
-                        .content(objectMapper.writeValueAsString(createDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andReturn();
-    }*/
-
-  /*  @Test
-    @SneakyThrows
-    void createBookingShouldReturnStatusBadRequestWhenRequestDataEmpty() {
-        BookingRequestDto createDto = BookingRequestDto.builder()
-                .build();
-
-        when(bookingService.create(any(), anyLong())).thenThrow(BookingNotAvailableException.class);
-
-        mockMvc.perform(post("/bookings")
-                        .header(USER_ID, 1L)
-                        .content(objectMapper.writeValueAsString(createDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andDo(print())
-                .andReturn();
-    }*/
-
     @Test
     @SneakyThrows
     void approveWhenParamFalseShouldReturnStatusOk() {

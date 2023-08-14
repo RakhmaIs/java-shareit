@@ -1,4 +1,4 @@
-/*
+
 package ru.practicum.shareit.item.servicetest;
 
 
@@ -611,4 +611,4 @@ class ItemServiceImplTest {
         assertEquals(0, result.size());
         verify(itemRepository, times(1)).findAllByRequestId(ID);
     }
-}*/
+}

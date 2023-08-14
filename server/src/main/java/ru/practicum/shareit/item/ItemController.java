@@ -38,8 +38,8 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<ItemResponseDto>> readAllByOwnerId(@RequestHeader(USER_ID) Long userId,
-                                                                  @RequestParam(name = "from", required = false) Integer from,
-                                                                  @RequestParam(name = "size", required = false) Integer size) {
+                                                                  @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                                  @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение информации о вещах, владельцем которых является пользователь с id = {}", userId);
         return new ResponseEntity<>(itemService.readItemsOwnedByUserId(userId, from, size), HttpStatus.OK);
     }

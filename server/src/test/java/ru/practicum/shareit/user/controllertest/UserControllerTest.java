@@ -177,24 +177,6 @@ class UserControllerTest {
                 .andDo(print());
     }
 
-  /*  @Test
-    @SneakyThrows
-    void updateUserShouldReturnBadRequestWhenRequestDataHasInvalidEmail() {
-        UserDto wrongEmail = UserDto.builder()
-                .email("testUpdate.mail.com")
-                .build();
-
-        String jsonUser = objectMapper.writeValueAsString(wrongEmail);
-
-        mvc.perform(patch("/users/1")
-                        .content(jsonUser)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andDo(print());
-
-        verify(userService, never()).updateUser(anyLong(), any(UserDto.class));
-    }*/
-
     @Test
     @SneakyThrows
     void updateUserShouldReturnNotFoundWhenRequestDataHasInvalidUserId() {

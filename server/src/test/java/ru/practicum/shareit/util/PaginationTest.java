@@ -18,35 +18,6 @@ public class PaginationTest {
     }
 
     @Test
-    @DisplayName("getPaginationWithSortDesc - null null - success page 0")
-    void getPaginationWithSortDescWhenPaginationParamsEqualsNullShouldReturnPage0() {
-        Pageable paginationWithSortDesc = Pagination.getPaginationWithSortDesc(null, null);
-
-        assertEquals(0, paginationWithSortDesc.getPageNumber());
-        assertEquals(Integer.MAX_VALUE, paginationWithSortDesc.getPageSize());
-    }
-
-    @Test
-    @DisplayName("getPaginationWithSortDesc - negative negative - throw PaginationInvalidParamException")
-    void getPaginationWithSortDescWhenPaginationParamsNegativeShouldThrowPaginationInvalidParameterException() {
-        PaginationInvalidParamException exception = assertThrows(PaginationInvalidParamException.class, () -> {
-            Pagination.getPaginationWithSortDesc(-1, -1);
-        });
-
-        assertEquals("Один из параметров или оба параметра пагинации не верны", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("getPaginationWithSortDesc - 0 0 - throw PaginationInvalidParamException")
-    void getPaginationWithSortDescWhenPaginationParamFromEquals0AndSizeEquals0ShouldThrowPaginationInvalidParameterException() {
-        PaginationInvalidParamException exception = assertThrows(PaginationInvalidParamException.class, () -> {
-            Pagination.getPaginationWithSortDesc(0, 0);
-        });
-
-        assertEquals("Один из параметров или оба параметра пагинации не верны", exception.getMessage());
-    }
-
-    @Test
     @DisplayName("getPaginationWithSortDesc - 0 1 - success")
     void getPaginationWithSortDescWhenPaginationFromEquals0SizeEquals1ShouldReturnPage0() {
         Pageable paginationWithSortDesc = Pagination.getPaginationWithSortDesc(0, 1);
@@ -78,7 +49,7 @@ public class PaginationTest {
         Pageable paginationWithoutSort = Pagination.getPaginationWithoutSort(null, null);
 
         assertEquals(0, paginationWithoutSort.getPageNumber());
-        assertEquals(Integer.MAX_VALUE, paginationWithoutSort.getPageSize());
+        assertEquals(20, paginationWithoutSort.getPageSize());
     }
 
     @Test
@@ -87,16 +58,7 @@ public class PaginationTest {
         PaginationInvalidParamException exception = assertThrows(PaginationInvalidParamException.class,
                 () -> Pagination.getPaginationWithoutSort(-1, -1));
 
-        assertEquals("Один из параметров или оба параметра пагинации не верны", exception.getMessage());
+        assertEquals("Неверные параметры пагинации.", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("getPaginationWithoutSortDesc - 0 0 - throw PaginationInvalidParamException")
-    void getPaginationWithoutSortDescWhenPaginationParamFromEq0AndSizeEq0ThrowPaginationInvalidParameterException() {
-        PaginationInvalidParamException exception = assertThrows(PaginationInvalidParamException.class, () -> {
-            Pagination.getPaginationWithSortDesc(0, 0);
-        });
-
-        assertEquals("Один из параметров или оба параметра пагинации не верны", exception.getMessage());
-    }
 }

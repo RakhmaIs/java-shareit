@@ -43,9 +43,9 @@ public class BookingController {
 
     @GetMapping()
     public ResponseEntity<List<BookingDto>> getUserBookings(@RequestHeader(USER_ID) Long userId,
-                                                            @RequestParam(name = "from", required = false/*, defaultValue = "0"*/)
+                                                            @RequestParam(name = "from", required = false, defaultValue = "0")
                                                             Integer from,
-                                                            @RequestParam(name = "size", required = false/*, defaultValue = "10"*/)
+                                                            @RequestParam(name = "size", required = false, defaultValue = "10")
                                                             Integer size,
                                                             @RequestParam(defaultValue = "ALL") String state) {
         return new ResponseEntity<>(bookingService.getAllByUser(userId, state, from, size), HttpStatus.OK);
@@ -53,9 +53,9 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingDto>> getOwnerStuffBookings(@RequestHeader(USER_ID) Long ownerId,
-                                                                  @RequestParam(name = "from", required = false/*, defaultValue = "0"*/)
+                                                                  @RequestParam(name = "from", required = false, defaultValue = "0")
                                                                   Integer from,
-                                                                  @RequestParam(name = "size", required = false/*, defaultValue = "10"*/)
+                                                                  @RequestParam(name = "size", required = false, defaultValue = "10")
                                                                   Integer size,
                                                                   @RequestParam(defaultValue = "ALL") String state) {
         return new ResponseEntity<>(bookingService.getAllByOwner(ownerId, state, from, size), HttpStatus.OK);
